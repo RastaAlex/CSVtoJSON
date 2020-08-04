@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = process.argv[2]; 
 const file = fs.readFileSync(path,{encoding: 'utf-8'});
+const tryCatch = require('try-catch');
 
-
-function csvJSON() {
+    function csvJSON() {
     const lines = file.split('\n')
     const result = []
     const headers = lines[0].split(',')
@@ -20,13 +20,13 @@ function csvJSON() {
    return result;
 }
 
-const newFile = csvJSON();
+const newFile = JSON.stringify(csvJSON(), null, '\t');
+const write = fs.writeFileSync('newJSONfile.json', newFile);
+const [error, result] = tryCatch(write);
 
-try {
-    fs.writeFileSync('newFile.JSON', newFile, 'utf8');
-    console.log('Done');
-  } catch (e) {
-    console.log(e)
-  };
+if(error) {
+    console.error(error.message);
+}
+
 
 
